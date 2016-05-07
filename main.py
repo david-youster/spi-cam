@@ -1,12 +1,14 @@
 import cv2
 import argparse
+import socket
+import io
 import numpy as np
 
 _CONFIG = {
     'display': False,
     'highlight': False,
     'webapp': False,
-    'console': False
+    'console': False,
 }
 
 _CASCADE_PATH = 'haarcascade_frontalface_default.xml'
@@ -80,8 +82,9 @@ def detect_people(hog, frame):
 def handle_output(rects, frame):
     for rect in rects:
         highlight_image(frame, *rect)
-        log_to_server(frame, *rect)
         log_to_console(*rect)
+    if len(rects) > 0:
+        log_to_server(frame)
 
 
 def highlight_image(frame, x, y, w, h):
@@ -89,8 +92,18 @@ def highlight_image(frame, x, y, w, h):
         cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
 
 
-def log_to_server(frame, x, y, w, h):
-    pass
+def log_to_server(frame):
+    if _CONFIG['webapp']:
+        retval, jpg = cv2.imencode('.jpg', frame)
+        stream = io.BytesIO(jpg)
+        s = socket.socket()
+        s.connect(('192.168.1.16', 8000))
+        next = stream.read(1024)
+        while next:
+            s.send(next)
+            next = stream.read()
+        s.shutdown(socket.SHUT_RDWR)
+        s.close()
 
 
 def log_to_console(x, y, w, h):
