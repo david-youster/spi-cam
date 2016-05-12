@@ -24,6 +24,7 @@ def parse_arguments():
     parser.add_argument('--console', action='store_true', default=False)
     parser.add_argument('--faces', action='store_true', default=False)
     parser.add_argument('-s', nargs='?', type=str, default='127.0.0.1')
+    parser.add_argument('-p', nargs='?', type=int, default=8000)
     setup(parser.parse_args())
 
 
@@ -34,6 +35,7 @@ def setup(args):
     _CONFIG['console'] = args.console
     _CONFIG['faces'] = args.faces
     _CONFIG['server'] = args.s
+    _CONFIG['port'] = args.p
 
 
 def main_loop():
@@ -100,7 +102,7 @@ def log_to_server(frame):
         retval, jpg = cv2.imencode('.jpg', frame)
         stream = io.BytesIO(jpg)
         s = socket.socket()
-        s.connect((_CONFIG['server'], 8000))
+        s.connect((_CONFIG['server'], _CONFIG['port']))
         next = stream.read(1024)
         while next:
             s.send(next)
