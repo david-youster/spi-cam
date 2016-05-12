@@ -1,4 +1,5 @@
 from threading import Thread
+from time import time
 import cv2
 import argparse
 import socket
@@ -9,6 +10,7 @@ _CONFIG = {}
 
 _CASCADE_PATH = 'haarcascade_frontalface_default.xml'
 
+last_detected = None
 
 def main():
     parse_arguments()
@@ -39,6 +41,9 @@ def parse_arguments():
     parser.add_argument(
         '-p', nargs='?', type=int, default=8000,
         help='Set the port number that the webapp is listening on')
+    parser.add_argument(
+        '-t', nargs='?', type=int, default=10,
+        help='Set the timeout between incidents')
     setup(parser.parse_args())
 
 
@@ -50,6 +55,7 @@ def setup(args):
     _CONFIG['faces'] = args.faces
     _CONFIG['server'] = args.s
     _CONFIG['port'] = args.p
+    _CONFIG['timeout'] = args.t
 
 
 def main_loop():
@@ -67,13 +73,27 @@ def main_loop():
 def process_camera_stream(camera, face_cascade, hog):
     return_code, frame = camera.read()
     grey = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    if _CONFIG['faces']:
-        faces = detect_faces(face_cascade, grey)
-        handle_output(faces, frame)
-    else:
-        people = detect_people(hog, grey)
-        handle_output(people, frame)
+    if check_timer():
+        if _CONFIG['faces']:
+            faces = detect_faces(face_cascade, grey)
+            handle_output(faces, frame)
+        else:
+            people = detect_people(hog, grey)
+            handle_output(people, frame)
     display_camera_stream(frame)
+
+
+def check_timer():
+    global last_detected
+    if last_detected is None:
+        last_detected = time()
+        return True
+    current_time = time()
+    if current_time - last_detected > _CONFIG['timeout']:
+        last_detected = current_time
+        return True
+    return False
+
 
 
 def detect_faces(classifier, frame):
