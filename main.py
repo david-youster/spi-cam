@@ -22,7 +22,7 @@ def parse_arguments():
     parser.add_argument('--webapp', action='store_false', default=True)
     parser.add_argument('--console', action='store_true', default=False)
     parser.add_argument('--faces', action='store_true', default=False)
-    parser.add_argument('-s', nargs='?', type=str, default='check_string_for_empty')
+    parser.add_argument('-s', nargs='?', type=str, default='127.0.0.1')
     setup(parser.parse_args())
 
 
@@ -32,7 +32,7 @@ def setup(args):
     _CONFIG['webapp'] = args.webapp
     _CONFIG['console'] = args.console
     _CONFIG['faces'] = args.faces
-    _CONFIG['server'] = args.s if args.s else 'localhost'
+    _CONFIG['server'] = args.s
 
 
 def main_loop():
