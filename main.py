@@ -22,6 +22,7 @@ def parse_arguments():
     parser.add_argument('--webapp', action='store_false', default=True)
     parser.add_argument('--console', action='store_true', default=False)
     parser.add_argument('--faces', action='store_true', default=False)
+    parser.add_argument('-s', nargs='?', type=str, default='check_string_for_empty')
     setup(parser.parse_args())
 
 
@@ -31,6 +32,7 @@ def setup(args):
     _CONFIG['webapp'] = args.webapp
     _CONFIG['console'] = args.console
     _CONFIG['faces'] = args.faces
+    _CONFIG['server'] = args.s if args.s else 'localhost'
 
 
 def main_loop():
@@ -92,7 +94,7 @@ def log_to_server(frame):
         retval, jpg = cv2.imencode('.jpg', frame)
         stream = io.BytesIO(jpg)
         s = socket.socket()
-        s.connect(('192.168.1.16', 8000))
+        s.connect((_CONFIG['server'], 8000))
         next = stream.read(1024)
         while next:
             s.send(next)
