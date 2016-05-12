@@ -4,12 +4,7 @@ import socket
 import io
 import numpy as np
 
-_CONFIG = {
-    'display': False,
-    'highlight': False,
-    'webapp': False,
-    'console': False,
-}
+_CONFIG = {}
 
 _CASCADE_PATH = 'haarcascade_frontalface_default.xml'
 
@@ -22,17 +17,17 @@ def main():
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--display', action='store_true')
-    parser.add_argument('--highlight', action='store_true')
-    parser.add_argument('--webapp', action='store_true')
-    parser.add_argument('--console', action='store_true')
-    parser.add_argument('--faces', action='store_true')
+    parser.add_argument('--display', action='store_true', default=False)
+    parser.add_argument('--highlight', action='store_true', default=False)
+    parser.add_argument('--webapp', action='store_false', default=True)
+    parser.add_argument('--console', action='store_true', default=False)
+    parser.add_argument('--faces', action='store_true', default=False)
     setup(parser.parse_args())
 
 
 def setup(args):
     _CONFIG['display'] = args.display
-    _CONFIG['highlight'] = args.highlight and args.display
+    _CONFIG['highlight'] = args.highlight
     _CONFIG['webapp'] = args.webapp
     _CONFIG['console'] = args.console
     _CONFIG['faces'] = args.faces
