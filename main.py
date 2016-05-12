@@ -103,7 +103,7 @@ def log_to_server(frame):
         stream = io.BytesIO(jpg)
         s = socket.socket()
         s.connect((_CONFIG['server'], _CONFIG['port']))
-        next = stream.read(1024)
+        next = stream.read()
         while next:
             s.send(next)
             next = stream.read()
