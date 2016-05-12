@@ -22,7 +22,7 @@ def parse_arguments():
             help='Display the camera stream')
     parser.add_argument('--highlight', action='store_true', default=False,
             help='Highlight detected incidents in the captured frame')
-    parser.add_argument('--webapp', action='store_false', default=True,
+    parser.add_argument('--noserver', action='store_false', default=True,
             help='Disable logging to the server')
     parser.add_argument('--console', action='store_true', default=False,
             help='Enable console logging')
@@ -38,7 +38,7 @@ def parse_arguments():
 def setup(args):
     _CONFIG['display'] = args.display
     _CONFIG['highlight'] = args.highlight
-    _CONFIG['webapp'] = args.webapp
+    _CONFIG['webapp'] = args.noserver
     _CONFIG['console'] = args.console
     _CONFIG['faces'] = args.faces
     _CONFIG['server'] = args.s
