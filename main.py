@@ -18,13 +18,20 @@ def main():
 
 def parse_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--display', action='store_true', default=False)
-    parser.add_argument('--highlight', action='store_true', default=False)
-    parser.add_argument('--webapp', action='store_false', default=True)
-    parser.add_argument('--console', action='store_true', default=False)
-    parser.add_argument('--faces', action='store_true', default=False)
-    parser.add_argument('-s', nargs='?', type=str, default='127.0.0.1')
-    parser.add_argument('-p', nargs='?', type=int, default=8000)
+    parser.add_argument('--display', action='store_true', default=False,
+            help='Display the camera stream')
+    parser.add_argument('--highlight', action='store_true', default=False,
+            help='Highlight detected incidents in the captured frame')
+    parser.add_argument('--webapp', action='store_false', default=True,
+            help='Disable logging to the server')
+    parser.add_argument('--console', action='store_true', default=False,
+            help='Enable console logging')
+    parser.add_argument('--faces', action='store_true', default=False,
+            help='Enable faces mode (default mode detects people)')
+    parser.add_argument('-s', nargs='?', type=str, default='127.0.0.1',
+            help='Set the hostname of the server running the webapp')
+    parser.add_argument('-p', nargs='?', type=int, default=8000,
+            help='Set the port number that the webapp is listening on')
     setup(parser.parse_args())
 
 
