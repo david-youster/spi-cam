@@ -1,3 +1,4 @@
+from threading import Thread
 import cv2
 import argparse
 import socket
@@ -77,6 +78,11 @@ def detect_people(hog, frame):
 
 
 def handle_output(rects, frame):
+    thread = Thread(target=handle_output_thread, args=(rects, frame,))
+    thread.start()
+
+
+def handle_output_thread(rects, frame):
     for rect in rects:
         highlight_image(frame, *rect)
         log_to_console(*rect)
