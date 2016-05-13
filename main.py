@@ -6,6 +6,11 @@ import socket
 import io
 import numpy as np
 
+_DEFAULTS = {
+    'server': '127.0.0.1',
+    'port': 8000,
+    'timeout': 10}
+
 _CONFIG = {}
 
 _CASCADE_PATH = 'haarcascade_frontalface_default.xml'
@@ -36,13 +41,13 @@ def parse_arguments():
         '--faces', action='store_true', default=False,
         help='Enable faces mode (default mode detects people)')
     parser.add_argument(
-        '-s', nargs='?', type=str, default='127.0.0.1',
+        '-s', nargs='?', type=str, default=_DEFAULTS['server'],
         help='Set the hostname of the server running the webapp')
     parser.add_argument(
-        '-p', nargs='?', type=int, default=8000,
+        '-p', nargs='?', type=int, default=_DEFAULTS['port'],
         help='Set the port number that the webapp is listening on')
     parser.add_argument(
-        '-t', nargs='?', type=int, default=10,
+        '-t', nargs='?', type=int, default=_DEFAULTS['timeout'],
         help='Set the timeout between incidents')
     setup(parser.parse_args())
 
