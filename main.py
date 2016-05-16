@@ -9,7 +9,7 @@ import numpy as np
 _DEFAULTS = {
     'server': '127.0.0.1',
     'port': 8000,
-    'timeout': 10}
+    'timeout': 5}
 
 _CONFIG = {}
 
