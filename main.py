@@ -41,6 +41,9 @@ def parse_arguments():
         '--faces', action='store_true', default=False,
         help='Enable faces mode (default mode detects people)')
     parser.add_argument(
+        '--threading', action='store_true', default=False,
+        help='Handle output in separate thread (experimental)')
+    parser.add_argument(
         '-s', nargs='?', type=str, default=_DEFAULTS['server'],
         help='Set the hostname of the server running the webapp')
     parser.add_argument(
@@ -58,6 +61,7 @@ def setup(args):
     _CONFIG['webapp'] = args.noserver
     _CONFIG['console'] = args.console
     _CONFIG['faces'] = args.faces
+    _CONFIG['threading'] = args.threading
     _CONFIG['server'] = args.s
     _CONFIG['port'] = args.p
     _CONFIG['timeout'] = args.t
@@ -119,8 +123,11 @@ def detect_people(hog, frame):
 
 
 def handle_output(rects, frame):
-    thread = Thread(target=handle_output_thread, args=(rects, frame,))
-    thread.start()
+    if _CONFIG['threading']:
+        thread = Thread(target=handle_output_thread, args=(rects, frame,))
+        thread.start()
+    else:
+        handle_output_thread(rects, frame)
 
 
 def handle_output_thread(rects, frame):
